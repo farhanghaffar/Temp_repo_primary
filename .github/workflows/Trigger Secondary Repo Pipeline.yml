@@ -10,10 +10,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Trigger Workflow Dispatch
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
+    - name: Upgrade pip
       run: |
-        curl -X POST \
-          -H "Accept: application/vnd.github.v3+json" \
-          -H "Authorization: Bearer ${{ secrets.YOUR_TOKEN }}" \
-          -H "Content-Type: application/json" \
-          https://api.github.com/repos/farhanghaffar/temp_repo_secondary/actions/workflows/72571241/dispatches
+        python -m pip install --upgrade pip
+        pip install allure-behave
+        pip --version
+    - name: run python
+      run: python trigger_pipeline.py
