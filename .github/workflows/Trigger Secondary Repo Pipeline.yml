@@ -19,8 +19,6 @@ jobs:
     - name: run python
       run: |
           ls
-          cd ..
-          pwd
           
       env: 
         github-token: ${{ secrets.GITHUB_TOKEN }}
