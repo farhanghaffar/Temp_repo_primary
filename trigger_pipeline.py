@@ -3,7 +3,7 @@ import os
 from github import Github
 from github import Auth
 
-auth = Auth.Token("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")
+auth = Auth.Token("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")
 
 owner = 'FarhanGhaffar'
 repo_name = 'temp_repo_secondary'
