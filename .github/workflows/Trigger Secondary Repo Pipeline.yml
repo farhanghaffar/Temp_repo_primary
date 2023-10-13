@@ -20,7 +20,7 @@ jobs:
       run: |
           ls
           cd ..
-          python trigger_pipeline.py
+          pwd
           
       env: 
         github-token: ${{ secrets.GITHUB_TOKEN }}
