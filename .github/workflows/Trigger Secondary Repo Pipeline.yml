@@ -17,6 +17,10 @@ jobs:
     - name: Upgrade pip
       run: ls
     - name: run python
-      run: python trigger_pipeline.py
+      run: |
+          ls
+          cd ..
+          python trigger_pipeline.py
+          
       env: 
         github-token: ${{ secrets.GITHUB_TOKEN }}
