@@ -12,7 +12,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
+        
+      - name: install @octokit/rest
+        run: npm install @octokit/rest
+        
       - name: Run JavaScript script
         run: node trigger_secondary.js
         env:
