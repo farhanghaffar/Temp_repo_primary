@@ -10,31 +10,31 @@ jobs:
 
     steps:
     - name: Trigger Secondary Repo Pipeline
-      uses: actions/github-script@0.9.0
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const { data: pullRequest } = await github.pulls.get({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            pull_number: context.payload.pull_request.number
-          });
+      run: |
+        const { exec } = require('@actions/exec');
+        const { github } = require('@actions/core');
 
-          const octokit = github.getOctokit("YOUR_SECONDARY_REPO_TOKEN");
-          const { data: workflowRuns } = await octokit.actions.listWorkflowRunsForRepo({
-            owner: "farhanghaffar",
-            repo: "temp_repo_secondary",
-            status: "queued"
-          });
+        const { data: pullRequest } = await github.pulls.get({
+          owner: process.env.GITHUB_REPOSITORY.split('/')[0],
+          repo: process.env.GITHUB_REPOSITORY.split('/')[1],
+          pull_number: process.env.GITHUB_EVENT_NUMBER
+        });
 
-          if (workflowRuns.total_count === 0) {
-            await octokit.actions.createWorkflowDispatch({
-              owner: "farhanghaffar",
-              repo: "temp_repo_secondary",
-              workflow_id: "deploy",
-              ref: "MAIN_BRANCH",
-              inputs: {
-                pull_request_number: pullRequest.number
-              }
-            });
+        const secondaryRepoOwner = "farhanghaffar";
+        const secondaryRepoName = "temp_repo_secondary";
+        const workflowId = "deploy";
+        const mainBranch = "main";
+
+        let workflowRuns = '';
+        await exec(`curl -X GET -u farhanghaffar:${process.env.GITHUB_PAT} "https://api.github.com/repos/${secondaryRepoOwner}/${secondaryRepoName}/actions/runs?status=queued"`, [], {
+          listeners: {
+            stdout: (data) => { workflowRuns += data.toString(); }
           }
+        });
+
+        workflowRuns = JSON.parse(workflowRuns);
+        if (workflowRuns.total_count === 0) {
+          await exec(`curl -X POST -u farhanghaffar:${process.env.GITHUB_PAT} "https://api.github.com/repos/${secondaryRepoOwner}/${secondaryRepoName}/actions/workflows/${workflowId}/dispatches" -d '{"ref":"${mainBranch}","inputs":{"pull_request_number":${pullRequest.number}}}'`);
+        }
+      env:
+        GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
