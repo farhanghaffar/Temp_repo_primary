@@ -32,7 +32,7 @@ jobs:
       run: pip install -r requirements.txt
 
     - name: Run Behave tests
-      run: behave NavigoPlatform/Features/RouterFeature/Login.feature -f allure_behave.formatter:AllureFormatter -o allure-results
+      run: behave navigo-automate/NavigoPlatform/Features/RouterFeature/Login.feature -f allure_behave.formatter:AllureFormatter -o allure-results
 
     - name: Upload Allure results
       uses: actions/upload-artifact@v2
