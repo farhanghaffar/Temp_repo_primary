@@ -21,3 +21,5 @@ jobs:
         pip --version
     - name: run python
       run: python trigger_pipeline.py
+      env: 
+        github-token: ${{ secrets.GITHUB_TOKEN }}
