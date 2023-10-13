@@ -29,7 +29,7 @@ jobs:
         pip --version
     
     - name: Install dependencies
-      run: pip install -r navigo-automate/requirements.txt
+      run: pip install -r requirements.txt
 
     - name: Run Behave tests
       run: behave navigo-automate/NavigoPlatform/Features/RouterFeature/Login.feature -f allure_behave.formatter:AllureFormatter -o allure-results
