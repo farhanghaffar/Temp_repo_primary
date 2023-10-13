@@ -1,40 +1,19 @@
 name: Trigger Secondary Repo Pipeline
 
 on:
-  pull_request:
-    types: [opened]
+  push:
+    branches:
+      - master
 
 jobs:
   trigger_secondary_repo:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Trigger Secondary Repo Pipeline
-      uses: actions/github-script@0.9.0
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const { data: pullRequest } = await github.pulls.get({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            pull_number: context.payload.pull_request.number
-          });
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-          const octokit = github.getOctokit("YOUR_SECONDARY_REPO_TOKEN");
-          const { data: workflowRuns } = await octokit.actions.listWorkflowRunsForRepo({
-            owner: "farhanghaffar",
-            repo: "temp_repo_secondary",
-            status: "queued"
-          });
-
-          if (workflowRuns.total_count === 0) {
-            await octokit.actions.createWorkflowDispatch({
-              owner: "farhanghaffar",
-              repo: "temp_repo_secondary",
-              workflow_id: "deploy",
-              ref: "MAIN_BRANCH",
-              inputs: {
-                pull_request_number: pullRequest.number
-              }
-            });
-          }
+      - name: Run JavaScript script
+        run: node trigger_secondary.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
