@@ -1,0 +1,40 @@
+name: Trigger Secondary Repo Pipeline
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  trigger_secondary_repo:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Trigger Secondary Repo Pipeline
+      uses: actions/github-script@0.9.0
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const { data: pullRequest } = await github.pulls.get({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.payload.pull_request.number
+          });
+
+          const octokit = github.getOctokit("YOUR_SECONDARY_REPO_TOKEN");
+          const { data: workflowRuns } = await octokit.actions.listWorkflowRunsForRepo({
+            owner: "SECONDARY_REPO_OWNER",
+            repo: "SECONDARY_REPO_NAME",
+            status: "queued"
+          });
+
+          if (workflowRuns.total_count === 0) {
+            await octokit.actions.createWorkflowDispatch({
+              owner: "SECONDARY_REPO_OWNER",
+              repo: "SECONDARY_REPO_NAME",
+              workflow_id: "SECONDARY_WORKFLOW_ID",
+              ref: "MAIN_BRANCH",
+              inputs: {
+                pull_request_number: pullRequest.number
+              }
+            });
+          }
