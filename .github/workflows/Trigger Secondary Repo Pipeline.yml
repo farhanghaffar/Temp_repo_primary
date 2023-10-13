@@ -12,11 +12,17 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-        
-      - name: install @octokit/rest
-        run: npm install @octokit/rest
-        
-      - name: Run JavaScript script
-        run: node trigger_secondary.js
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+      - name: Upgrade pip
+        run: |
+          python -m pip install --upgrade pip
+          pip install pygithub
+          pip --version
+          
+      - name: Run Python script
+        run: python trigger_pipeline.py
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
