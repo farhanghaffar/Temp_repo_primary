@@ -18,6 +18,7 @@ jobs:
       run: |
         pip install pygithub
         pip --version
+        ls
     - name: run python
       run: python trigger_pipeline.py
       env: 
