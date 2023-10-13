@@ -15,10 +15,7 @@ jobs:
       with:
         python-version: 3.x
     - name: Upgrade pip
-      run: |
-        pip install pygithub
-        pip --version
-        ls
+      run: ls
     - name: run python
       run: python trigger_pipeline.py
       env: 
