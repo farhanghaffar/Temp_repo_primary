@@ -18,4 +18,4 @@ repo = g.get_user(owner).get_repo(repo_name)
 # workflow_runs = repo.get_workflow_runs(event = 'queued')
 
 # if workflow_runs.totalCount == 0:
-#     repo.get_workflow(workflow_id).create_dispatch(ref=main_branch)
+repo.get_workflow(workflow_id).create_dispatch(ref=main_branch)
