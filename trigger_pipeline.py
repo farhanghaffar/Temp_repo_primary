@@ -11,7 +11,7 @@ workflow_id = '72571241'
 main_branch = 'main'
 
 # github_access_token = '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'
-# g = Github(os.environ.get('GITHUB_TOKEN'))
+g = Github(os.environ.get('GITHUB_TOKEN'))
 print(os.environ.get('GITHUB_TOKEN'))
 # repo = g.get_user(owner).get_repo(repo_name)
 
