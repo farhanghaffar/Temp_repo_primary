@@ -10,7 +10,7 @@ repo_name = 'temp_repo_secondary'
 workflow_id = '72571241'
 main_branch = 'main'
 
-github_access_token = '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'
+# github_access_token = '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'
 g = Github(auth=auth)
 
 repo = g.get_user(owner).get_repo(repo_name)
