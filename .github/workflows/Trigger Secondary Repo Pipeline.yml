@@ -14,27 +14,36 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          const { data: pullRequest } = await github.pulls.get({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            pull_number: context.payload.pull_request.number
-          });
-
-          const octokit = github.getOctokit("YOUR_SECONDARY_REPO_TOKEN");
-          const { data: workflowRuns } = await octokit.actions.listWorkflowRunsForRepo({
-            owner: "farhanghaffar",
-            repo: "temp_repo_secondary",
-            status: "queued"
-          });
-
-          if (workflowRuns.total_count === 0) {
-            await octokit.actions.createWorkflowDispatch({
-              owner: "farhanghaffar",
-              repo: "temp_repo_secondary",
-              workflow_id: "deploy",
-              ref: "MAIN_BRANCH",
-              inputs: {
-                pull_request_number: pullRequest.number
+          const { GitHub, context } = require('@actions/github');
+          const token = process.env.GITHUB_TOKEN;
+          const octokit = new GitHub(token);
+          
+          (async () => {
+            try {
+              const { data: pullRequest } = await octokit.pulls.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.payload.pull_request.number
+              });
+          
+              const { data: workflowRuns } = await octokit.actions.listWorkflowRuns({
+                owner: farhanghaffar,
+                repo: temp_repo_secondary,
+                status: "queued"
+              });
+          
+              if (workflowRuns.total_count === 0) {
+                await octokit.actions.createWorkflowDispatch({
+                  owner: farhanghaffar,
+                  repo: temp_repo_secondary,
+                  workflow_id: deploy,
+                  ref: "MAIN_BRANCH",
+                  inputs: {
+                    pull_request_number: pullRequest.number
+                  }
+                });
               }
-            });
-          }
+            } catch (error) {
+              console.error('An error occurred: ', error);
+            }
+          })();
