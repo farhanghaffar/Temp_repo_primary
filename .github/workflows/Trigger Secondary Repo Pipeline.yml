@@ -15,23 +15,23 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
           const { data: pullRequest } = await github.pulls.get({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
+            owner: context.payload.repository.owner.login,
+            repo: context.payload.repository.name,
             pull_number: context.payload.pull_request.number
           });
 
-          const octokit = github.getOctokit("YOUR_SECONDARY_REPO_TOKEN");
+          const octokit = github.getOctokit("${{ secrets.GITHUB_TOKEN }}");
           const { data: workflowRuns } = await octokit.actions.listWorkflowRunsForRepo({
-            owner: "farhanghaffar",
-            repo: "temp_repo_secondary",
+            owner: farhanghaffar,
+            repo: temp_repo_secondary,
             status: "queued"
           });
 
           if (workflowRuns.total_count === 0) {
             await octokit.actions.createWorkflowDispatch({
-              owner: "farhanghaffar",
-              repo: "temp_repo_secondary",
-              workflow_id: "deploy",
+              owner: farhanghaffar,
+              repo: temp_repo_secondary,
+              workflow_id: deploy,
               ref: "MAIN_BRANCH",
               inputs: {
                 pull_request_number: pullRequest.number
