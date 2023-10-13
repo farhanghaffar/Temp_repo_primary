@@ -9,6 +9,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Install Dependencies
+      run: npm install @octokit/rest
+      
     - name: Trigger Secondary Repo Pipeline
       uses: actions/github-script@0.9.0
       with:
