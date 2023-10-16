@@ -17,7 +17,6 @@ jobs:
     - name: Upgrade pip
       run: ls
     - name: run python
-      run: |
-          python /home/runner/work/Temp_repo_primary/Temp_repo_primary/trigger_pipeline.py
+      run: python home/runner/work/Temp_repo_primary/Temp_repo_primary/trigger_pipeline.py
       env: 
         github-token: ${{ secrets.GITHUB_TOKEN }}
