@@ -10,11 +10,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Set up things
-      uses: actions/checkout@v2
-    - name: run
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
+    - name: Upgrade pip
+      run: ls
+    - name: run python
       run: |
-          ls /home/runner/work/Temp_repo_primary/Temp_repo_primary
-          
+          python /home/runner/work/Temp_repo_primary/Temp_repo_primary/trigger_pipeline.py
       env: 
         github-token: ${{ secrets.GITHUB_TOKEN }}
