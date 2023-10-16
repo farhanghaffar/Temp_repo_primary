@@ -6,17 +6,22 @@ on:
       - main
 
 jobs:
-  trigger_secondary_repo:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.x
-    - name: Upgrade pip
-      run: ls
-    - name: run python
-      run: python home/runner/work/Temp_repo_primary/Temp_repo_primary/trigger_pipeline.py
-      env: 
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Change directory
+        run: cd NavigoPlatform  # Adjust the directory path if necessary
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
+      - name: Run Python script
+        run: |
+            python trigger_pipeline.py
+        env: 
+          github-token: ${{ secrets.GITHUB_TOKEN }}
