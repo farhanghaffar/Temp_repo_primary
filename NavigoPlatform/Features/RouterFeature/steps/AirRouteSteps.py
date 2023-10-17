@@ -11,6 +11,7 @@ def ClickOnCreateNewBtn(Context):
         Context.airRoutePage = AirRoutesPage(Context.driver)
         Context.airRoutePage.ClickOnCreateNewRouteBtn()
         TestConfig.logger.info("Clicked on Create New btn")
+        
     except:
         assert False, "Not able to click on Create New button"
 
