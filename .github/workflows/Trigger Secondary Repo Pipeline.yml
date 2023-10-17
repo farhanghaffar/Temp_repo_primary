@@ -27,3 +27,4 @@ jobs:
             python trigger_pipeline.py
         env: 
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          
