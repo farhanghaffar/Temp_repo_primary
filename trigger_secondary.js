@@ -1,35 +1,28 @@
-const { Octokit } = require('@octokit/rest');
+const { Octokit } = require("@octokit/core");
+const { createAppAuth } = require("@octokit/auth-app");
 
-(async () => {
-  try {
-    const octokit = new Octokit({
-      auth: process.env.GITHUB_TOKEN,
+const owner = 'FarhanGhaffar';
+const repoName = 'temp_repo_secondary';
+const workflowId = '72571241';
+const mainBranch = 'main';
+
+const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+
+async function createWorkflowDispatch() {
+  const { data: workflowRuns } = await octokit.request('GET /repos/{owner}/{repo}/actions/runs', {
+    owner,
+    repo: repoName,
+    event: 'queued'
+  });
+
+  if (workflowRuns.total_count === 0) {
+    await octokit.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
+      owner,
+      repo: repoName,
+      workflow_id: workflowId,
+      ref: mainBranch
     });
-
-    const { data: pullRequest } = await octokit.pulls.get({
-      owner: process.env.GITHUB_REPOSITORY.split('/')[0],
-      repo: process.env.GITHUB_REPOSITORY.split('/')[1],
-      pull_number: process.env.GITHUB_EVENT_NUMBER,
-    });
-
-    const { data: workflowRuns } = await octokit.actions.listWorkflowRuns({
-      owner: "farhanghaffar",
-      repo: "temp_repo_secondary",
-      status: "queued",
-    });
-
-    if (workflowRuns.total_count === 0) {
-      await octokit.actions.createWorkflowDispatch({
-        owner: "farhanghaffar",
-        repo: "temp_repo_secondary",
-        workflow_id: "deploy",
-        ref: "MAIN_BRANCH",
-        inputs: {
-          pull_request_number: pullRequest.number,
-        },
-      });
-    }
-  } catch (error) {
-    console.error('An error occurred: ', error);
   }
-})();
+}
+
+createWorkflowDispatch();
