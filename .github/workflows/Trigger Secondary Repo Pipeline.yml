@@ -16,11 +16,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 'latest'
+          node-version: '14'
 
       - name: Install dependencies
         run: |
-          npm install @octokit/core @octokit/auth-app @octokit/rest
+          npm install @octokit/rest
 
       - name: Run JavaScript script
         run: |
