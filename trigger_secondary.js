@@ -1,6 +1,6 @@
 const { Octokit } = require("@octokit/rest");
 
-const owner = 'FarhanGhaffar';
+const owner = 'farhanghaffar';
 const repo = 'temp_repo_secondary';
 const workflowId = '72571241';
 const mainBranch = 'main';
@@ -14,7 +14,7 @@ async function createWorkflowDispatch() {
     owner,
     repo,
     event: 'push',
-    branch: 'main',
+    branch: mainBranch,
   });
 
   if (workflowRuns.total_count === 0) {
