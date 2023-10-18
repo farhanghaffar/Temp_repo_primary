@@ -19,10 +19,8 @@ jobs:
           node-version: '14'
 
       - name: Install dependencies
-        run: npm install @octokit/core @octokit/auth-app
-        
-      - name: Install dependencies
-        run: npm install @octokit/rest
+        run: |
+          npm install @octokit/core @octokit/auth-app @octokit/rest
 
       - name: Run JavaScript script
         run: |
