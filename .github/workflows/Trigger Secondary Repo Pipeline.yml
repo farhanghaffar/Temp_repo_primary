@@ -26,4 +26,4 @@ jobs:
         run: |
           node trigger_secondary.js
         env:
-          GITHUB_TOKEN: ${{ secrets.token }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
