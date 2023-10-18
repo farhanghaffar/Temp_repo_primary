@@ -1,26 +1,28 @@
-const { Octokit } = require("@octokit/core");
-const { createAppAuth } = require("@octokit/auth-app");
+const { Octokit } = require("@octokit/rest");
 
 const owner = 'FarhanGhaffar';
-const repoName = 'temp_repo_secondary';
+const repo = 'temp_repo_secondary';
 const workflowId = '72571241';
 const mainBranch = 'main';
 
-const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+const octokit = new Octokit({
+  auth: process.env.GITHUB_TOKEN,
+});
 
 async function createWorkflowDispatch() {
-  const { data: workflowRuns } = await octokit.request('GET /repos/{owner}/{repo}/actions/runs', {
+  const { data: workflowRuns } = await octokit.actions.listWorkflowRuns({
     owner,
-    repo: repoName,
-    event: 'queued'
+    repo,
+    event: 'push',
+    branch: 'main',
   });
 
   if (workflowRuns.total_count === 0) {
-    await octokit.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
+    await octokit.actions.createWorkflowDispatch({
       owner,
-      repo: repoName,
+      repo,
       workflow_id: workflowId,
-      ref: mainBranch
+      ref: mainBranch,
     });
   }
 }
